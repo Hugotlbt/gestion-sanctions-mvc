@@ -15,6 +15,7 @@
         "symfony/cache": "^7.1",
         "symfony/var-dumper": "^7.1",
         "doctrine/orm": "^3.3",
-        "doctrine/dbal": "^4.2"
+        "doctrine/dbal": "^4.2",
+        "vlucas/phpdotenv": "^5.6"
     }
 }

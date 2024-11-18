@@ -1,6 +1,5 @@
 <?php
 
-
 // Configuration de l'EntityManager
 // Ce fichier permet de configurer l'EntityManager qui est l'objet (classe EntityManager) qui va gérer les actions
 // à réaliser sur le base de données :
