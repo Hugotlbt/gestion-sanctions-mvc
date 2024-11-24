@@ -13,25 +13,27 @@ $dotEnv->load(); //charger les variables d'environnement de .env dans un tableau
 
 $db = new PDO("mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']}",$_ENV['DB_USER'],$_ENV['DB_PASSWORD']);
 
-$route=$_GET['route'] ?? 'acceuil';
+$route = $_GET['route'] ?? 'acceuil';
 
-// test la valeur de $route
-switch ($route){
+// Test de la valeur de $route
+switch ($route) {
     case 'acceuil':
         $accueilController = new \App\Controllers\AccueilController();
         $accueilController->accueil();
         break;
+
     case 'mention-legal':
         $mentionLegalController = new \App\Controllers\MentionLegalController();
         $mentionLegalController->mentionLegal();
         break;
+
     case 'inscription':
-        $inscriptionController = new \App\Controllers\InscriptionController();
+        $inscriptionController = new \App\Controllers\InscriptionController($entityManager);
         $inscriptionController->inscription();
         break;
 
     default:
-        // erreur 404
-        echo "Page non trouvée";
-        break;
+        // Redirection vers l'accueil en cas de route non trouvée
+        header("Location: /?route=acceuil");
+        exit;
 }
