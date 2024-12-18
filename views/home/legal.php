@@ -5,9 +5,12 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Mention legals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>legal</title>
 </head>
-<body>
+<body class="bg-body-secondary">
+
 <div class="container">
     <p class="mt-5 text-center h1 fw-bold">Mentions legales</p>
     <p class="mt-5 h2 fw-bold">Éditeur du site </p>
@@ -39,5 +42,6 @@
     <p class="">   Pour toute question, réclamation, ou suggestion concernant le site, vous pouvez contacter
     <p class=" h5">lyceegaudper@gmail.com </p>
 </div>
+
 </body>
 </html>

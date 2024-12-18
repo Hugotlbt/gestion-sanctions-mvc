@@ -1,3 +1,6 @@
+<?php
+session_start()
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Accueil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         .feature-icon-small {
             width: 80px;
@@ -33,7 +37,7 @@
         <div class="col d-flex flex-column align-items-start gap-2">
             <h2 class="fw-bold text-body-emphasis">Gérez facilement les sanctions des élèves</h2>
             <p class="text-body-secondary">Créez un compte pour accéder à l'application et gérer efficacement vos tâches.</p>
-            <a href="index.php?route=inscription" class="btn btn-primary btn-lg">Se connecter</a>
+            <a href="/inscription" class="btn btn-primary btn-lg">Crée un compte</a>
         </div>
 
         <div class="col">
@@ -74,5 +78,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

@@ -1,39 +1,29 @@
 <?php
 
-// Controller FRONTAL => Router
-// Toutes les requetes des utilisateurs passent par ce ficher
+require_once __DIR__ . '/../vendor/autoload.php';
+$entityManager = require_once __DIR__.'/../config/bootstrap.php';
+// Récupération des routes
+$routes = require_once __DIR__ . '/../config/routes.php';
 
+// Récupération de l'URL actuelle
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-$entityManager = require_once __DIR__ .'/../config/bootstrap.php';
-// Chargement des variables d'environnement
-$dotEnv=\Dotenv\Dotenv::createImmutable(__DIR__.'/../');
-$dotEnv->load(); //charger les variables d'environnement de .env dans un tableau $_ENV
+// Recherche de la route correspondante
+if (!isset($routes[$uri])) {
+    $errorController = new \App\Controller\ErrorController();
+    $errorController->error404();
+    exit;
+}
 
-// Configurer la connexion a la BDD
-
-$db = new PDO("mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']}",$_ENV['DB_USER'],$_ENV['DB_PASSWORD']);
-
-$route = $_GET['route'] ?? 'acceuil';
-
-// Test de la valeur de $route
-switch ($route) {
-    case 'acceuil':
-        $accueilController = new \App\Controllers\AccueilController();
-        $accueilController->accueil();
-        break;
-
-    case 'mention-legal':
-        $mentionLegalController = new \App\Controllers\MentionLegalController();
-        $mentionLegalController->mentionLegal();
-        break;
-
-    case 'inscription':
-        $inscriptionController = new \App\Controllers\InscriptionController($entityManager);
-        $inscriptionController->inscription();
-        break;
-
-    default:
-        // Redirection vers l'accueil en cas de route non trouvée
-        header("Location: /?route=acceuil");
-        exit;
+// Récupération du contrôleur et de l'action
+[$controllerName, $action] = $routes[$uri];
+$controllerClass = "App\\Controller\\{$controllerName}";
+try {
+    // Instanciation du contrôleur et appel de l'action
+    $controller = new $controllerClass($entityManager);
+    $controller->$action();
+} catch (\Exception $e) {
+    error_log($e->getMessage());
+    $errorController = new \App\Controller\ErrorController();
+    $errorController->error404();
 }

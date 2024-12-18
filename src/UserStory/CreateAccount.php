@@ -24,7 +24,7 @@ class CreateAccount
     {
         // Vérifier que des données sont présentes
         if (empty($prenom) ||empty($nom) ||empty($email) || empty($password)) {
-            throw new \Exception("Aucune donnée rentrée.");
+            throw new \Exception("Un ou plusieurs champs sont vide.");
         }
 
         // Vérifier si l'email est valide
@@ -59,3 +59,4 @@ class CreateAccount
         return $user;
     }
 }
+
