@@ -8,6 +8,7 @@ return [
     '/deconnexion' => ['SanctionsController', 'deconnexion'],
     '/promotion' => ['SanctionsController', 'promotion'],
     '/redirect' => ['SanctionsController', 'pageErreur'],
-    '/ajout-eleves'  => ['SanctionsController', 'ajoutEleve']
+    '/ajout-eleves'  => ['SanctionsController', 'ajoutEleve'],
+    '/ajout-sanction' => ['SanctionsController', 'ajoutSanction']
 
 ];

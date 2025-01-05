@@ -19,9 +19,9 @@ class Etudiant
     #[ORM\Column(name: 'nom_etudiant', type: 'string', length: 50)]
     protected string $nom;
 
-        #[ORM\ManyToOne(targetEntity: Promotion::class)]
-        #[ORM\JoinColumn('id_promotion',referencedColumnName:'id_promotion',nullable: false)]
-        protected Promotion $idPromotion;
+    #[ORM\ManyToOne(targetEntity: Promotion::class)]
+    #[ORM\JoinColumn('id_promotion', referencedColumnName: 'id_promotion', nullable: false)]
+    protected Promotion $idPromotion;
 
     /**
      * @return int
@@ -74,16 +74,16 @@ class Etudiant
     /**
      * @return string
      */
-    public function getIdPromotion(): string
+    public function getIdPromotion(): Promotion
     {
-        return $this->id_promotion;
+        return $this->idPromotion;
     }
 
     /**
-     * @param string $id_promotion
+     * @param Promotion $id_promotion
      */
-    public function setIdPromotion(string $id_promotion): void
+    public function setIdPromotion(Promotion $idPromotion): void
     {
-        $this->id_promotion = $id_promotion;
+        $this->idPromotion = $idPromotion;
     }
 }

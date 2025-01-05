@@ -24,6 +24,9 @@
                 <li class="nav-item btn">
                     <a class="nav-link active text-black fw-bold" aria-current="page" href="/">Accueil</a>
                 </li>
+                    <li class="nav-item btn btn-close-white">
+                        <a class="nav-link text-black fw-bold" href="/ajout-sanction">Sanctions</a>
+                    </li>
                 <li class="nav-item btn btn-close-white">
                     <a class="nav-link text-black fw-bold" href="/ajout-eleves">Ajouter des élèves</a>
                 </li>

@@ -20,37 +20,44 @@
         </div>
     <?php endif; ?>
 
-    <form action="" method="POST" class="mt-4">
-
+    <form action="" method="POST" class="mt-4" enctype="multipart/form-data">
         <div class="form-group form-control-lg">
             <label for="formFile" class="form-label">Fichier CSV</label>
-            <input class="form-control form-control" <?= (isset($erreurs["formFile"])) ? "border border-2 border-danger" : "" ?>
+            <input class="form-control <?= isset($erreurs['formFile']) ? 'border border-2 border-danger' : '' ?>"
                    id="formFile"
+                   name="formFile"
                    type="file"
                    accept=".csv"
-                   value=<?=(!empty($erreurs)) ? $_POST["formFile"] : "" ?>>
-            <?php if (isset($erreurs["formFile"])): ?>
-                <p class="form-text text-danger"><?= $erreurs["formFile"] ?></p>
+                   required>
+            <?php if (isset($erreurs['formFile'])): ?>
+                <p class="form-text text-danger"><?= $erreurs['formFile'] ?></p>
             <?php endif; ?>
         </div>
 
         <div class="form-group form-control-lg">
             <label for="listePromotion" class="form-label">Liste des promotions</label>
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Choisir une promotion</option>
+            <select class="form-select <?= isset($erreurs['listePromotion']) ? 'border border-2 border-danger' : '' ?>"
+                    name="listePromotion"
+                    id="listePromotion"
+                    required>
+                <option value="" selected>Choisir une promotion</option>
 
-                <?php  foreach ($promotions->getPromotion() as $promotion):?>
-                    <option >
-                        <?= $promotion->getLibelle().' - '.$promotion->getAnnee() ?>
+
+
+                <?php foreach ($promotions as $promotion): ?>
+                    <option value="<?= $promotion->getId() ?>">
+                        <?= htmlspecialchars($promotion->getLibelle() . ' - ' . $promotion->getAnnee(), ENT_QUOTES, 'UTF-8') ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-
-
+            <?php if (isset($erreurs['listePromotion'])): ?>
+                <p class="form-text text-danger"><?= $erreurs['listePromotion'] ?></p>
+            <?php endif; ?>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-lg w-100 mt-5"> Importer les élèves <i class="bi bi-plus-circle "></i> </button>
-
+        <button type="submit" class="btn btn-primary btn-lg w-100 mt-5">
+            Importer les élèves <i class="bi bi-plus-circle"></i>
+        </button>
     </form>
 
 </div>
