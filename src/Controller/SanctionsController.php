@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Etudiant;
+use App\Entity\Motif;
 use App\Entity\Promotion;
 use App\UserStory\ConnectAccount;
 use App\UserStory\CreateAccount;
 use App\UserStory\CreatePromotion;
+use App\UserStory\CreateSanction;
 use App\UserStory\ImportCSV;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
@@ -179,66 +182,48 @@ class SanctionsController extends AbstractController
 
     public function ajoutSanction(): void
     {
-        // Vérification que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            $this->redirect('/redirect');
-        }
-
         $erreurs = [];
+
+        // Vérification de la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $etudiantId = $_POST['etudiant'] ?? null;
+            // Récupération et validation des données du formulaire
+            $eleveId = $_POST['eleve'] ?? null;
             $motifId = $_POST['motif'] ?? null;
-            $description = $_POST['description'] ?? null;
+            $descriptionMotif = $_POST['descriptionMotif'] ?? null;
             $dateIncident = $_POST['dateIncident'] ?? null;
+            $demandeur = $_POST['demandeur'] ?? null;
 
-            // Validation des données
-            if (!$etudiantId) {
-                $erreurs['etudiant'] = 'Veuillez sélectionner un étudiant.';
-            }
+            try {
+                // Exécution de la création de sanction
+                $sanctionService = new CreateSanction($this->entityManager);
+                $sanctionService->execute(
+                    $eleveId,
+                    $motifId,
+                    $descriptionMotif,
+                    $dateIncident,
+                    $demandeur,
+                    'admin'
+                );
 
-            if (!$motifId) {
-                $erreurs['motif'] = 'Veuillez sélectionner un motif.';
-            }
-
-            if (!$dateIncident) {
-                $erreurs['dateIncident'] = 'Veuillez fournir une date d’incident.';
-            }
-
-            if (empty($erreurs)) {
-                try {
-                    $etudiant = $this->entityManager->getRepository(\App\Entity\Etudiant::class)->find($etudiantId);
-                    $motif = $this->entityManager->getRepository(\App\Entity\Motif::class)->find($motifId);
-
-                    $sanction = new \App\Entity\Sanction();
-                    $sanction->setEtudiant($etudiant);
-                    $sanction->setDescription($description);
-                    $sanction->setDateIncident(new \DateTime($dateIncident));
-                    $sanction->setDateCreation(new \DateTime());
-
-                    // Utilisation du libellé du motif si un objet Motif existe
-                    if ($motif) {
-                        $sanction->setMotif($motif->getLibelle()); // Utiliser le libellé du motif
-                    }
-
-                    $this->entityManager->persist($sanction);
-                    $this->entityManager->flush();
-
-                    $_SESSION['success'] = 'Sanction ajoutée avec succès.';
-                    $this->redirect('/');
-                } catch (\Exception $e) {
-                    $erreurs['general'] = 'Une erreur est survenue : ' . $e->getMessage();
-                }
+                // Stockage du message de succès en session et redirection
+                $_SESSION['success'] = 'La sanction a été créée avec succès.';
+                $this->redirect('/');
+            } catch (\Exception $e) {
+                // Capture des erreurs et ajout au tableau
+                $erreurs[] = $e->getMessage();
             }
         }
 
-        // Récupérer les promotions et motifs pour remplir le formulaire
-        $promotions = $this->entityManager->getRepository(\App\Entity\Promotion::class)->findAll();
-        $motifs = $this->entityManager->getRepository(\App\Entity\Motif::class)->findAll();
+        // Récupération des données nécessaires à l'affichage
+        $eleves = $this->entityManager->getRepository(Etudiant::class)->findAll();
+        $motifs = $this->entityManager->getRepository(Motif::class)->findAll();
 
-        $this->render('Sanctions/ajoutSanction', [
-            'promotions' => $promotions,
+        // Affichage du formulaire avec les erreurs éventuelles
+        $this->render('sanctions/ajoutSanction', [
+            'erreurs' => $erreurs,
+            'eleves' => $eleves,
             'motifs' => $motifs,
-            'erreurs' => $erreurs ?? null,
         ]);
     }
+
 }

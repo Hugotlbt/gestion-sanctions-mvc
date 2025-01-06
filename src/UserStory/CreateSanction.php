@@ -2,12 +2,10 @@
 
 namespace App\UserStory;
 
-use App\Entity\Sanction;
 use App\Entity\Etudiant;
-use App\Entity\User;
+use App\Entity\Motif;
+use App\Entity\Sanction;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
 
 class CreateSanction
 {
@@ -18,56 +16,65 @@ class CreateSanction
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @throws OptimisticLockException
-     * @throws ORMException
-     * @throws \Exception
-     */
     public function execute(
-        Etudiant $etudiant,
-        string $nomDemandeur,
-        string $motif,
-        string $description,
-        \DateTime $dateIncident,
-        User $utilisateur
+        ?int $eleveId,
+        ?int $motifId,
+        ?string $descriptionMotif,
+        ?string $dateIncident,
+        ?string $demandeur,
+        ?string $creePar
     ): Sanction {
-        // Vérifier que tous les champs obligatoires sont remplis
-        if (empty($etudiant) || empty($nomDemandeur) || empty($motif) || empty($description) || empty($dateIncident)) {
-            throw new \Exception("Un ou plusieurs champs sont vides.");
+        // Validation des champs obligatoires
+        if (empty($eleveId) || empty($descriptionMotif) || empty($dateIncident) || empty($demandeur)) {
+            throw new \Exception("Tous les champs obligatoires doivent être renseignés.");
         }
 
-        // Vérifier le format du nom du demandeur
-        if (!preg_match('/^[a-zA-Z\s\-]+$/', $nomDemandeur)) {
-            throw new \Exception("Le nom du demandeur contient des caractères invalides.");
+        // Vérification de l'élève
+        $eleve = $this->entityManager->getRepository(Etudiant::class)->find($eleveId);
+        if (!$eleve) {
+            throw new \Exception("L'élève sélectionné est introuvable.");
         }
 
-        // Vérifier la longueur de la description
-        if (strlen($description) < 10) {
-            throw new \Exception("La description doit contenir au moins 10 caractères.");
+        // Vérification du motif (si sélectionné)
+        $motif = $motifId
+            ? $this->entityManager->getRepository(Motif::class)->find($motifId)
+            : null;
+        if ($motifId && !$motif) {
+            throw new \Exception("Le motif sélectionné est introuvable.");
         }
 
-        // Vérifier que la date de l'incident n'est pas dans le futur
-        $now = new \DateTime();
-        if ($dateIncident > $now) {
-            throw new \Exception("La date de l'incident ne peut pas être dans le futur.");
+        // Validation de la date de l'incident
+        $dateIncidentObj = \DateTime::createFromFormat('Y-m-d', $dateIncident);
+        if (!$dateIncidentObj || $dateIncidentObj > new \DateTime()) {
+            throw new \Exception("La date de l'incident est invalide ou dans le futur.");
         }
-        
 
-        // Créer une instance de la classe Sanction avec les données validées
+        // Validation de la description du motif
+        if (strlen($descriptionMotif) < 10) {
+            throw new \Exception("La description du motif doit comporter au moins 10 caractères.");
+        }
+        if (strlen($descriptionMotif) > 255) {
+            throw new \Exception("La description du motif ne peut pas dépasser 255 caractères.");
+        }
+
+        // Validation de la longueur du nom du demandeur
+        if (strlen($demandeur) > 100) {
+            throw new \Exception("Le nom du demandeur ne peut pas dépasser 100 caractères.");
+        }
+
+        // Création de la sanction
         $sanction = new Sanction();
-        $sanction->setEtudiant($etudiant);
-        $sanction->setNomDemandeur($nomDemandeur);
+        $sanction->setEleve($eleve);
         $sanction->setMotif($motif);
-        $sanction->setDescription($description);
-        $sanction->setDateIncident($dateIncident);
-        $sanction->setDateCreation(new \DateTime()); // Date actuelle
-        $sanction->setUtilisateur($utilisateur);
+        $sanction->setDescriptionMotif($descriptionMotif);
+        $sanction->setDateIncident($dateIncidentObj);
+        $sanction->setDemandeur($demandeur);
+        $sanction->setCreePar($creePar);
 
-        // Persister l'instance en utilisant l'entity manager
+        // Sauvegarde dans la base de données
         $this->entityManager->persist($sanction);
         $this->entityManager->flush();
 
         return $sanction;
     }
 }
-

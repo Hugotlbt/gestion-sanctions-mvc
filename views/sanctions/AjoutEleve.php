@@ -14,9 +14,13 @@
 <div class="container mt-5" style="height: 60%">
     <h1 class="pt-5">Ajouter des élèves à partir d'un fichier CSV</h1>
 
-    <?php if (isset($erreurs)) : ?>
+    <?php if (isset($erreurs)): ?>
         <div class="alert alert-danger" role="alert">
-            <?= $erreurs; ?>
+            <ul>
+                <?php foreach ($erreurs as $erreur): ?>
+                    <li><?= htmlspecialchars($erreur) ?></li>
+                <?php endforeach; ?>
+            </ul>
         </div>
     <?php endif; ?>
 

@@ -6,96 +6,113 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'sanctions')]
-class Sanction {
+class Sanction
+{
     #[ORM\Id]
-    #[ORM\Column(name: 'id_sanction', type: 'integer')]
     #[ORM\GeneratedValue]
+    #[ORM\Column(name:'id_sanction',type:'integer')]
     protected int $id;
 
+
     #[ORM\ManyToOne(targetEntity: Etudiant::class)]
-    #[ORM\JoinColumn(name: 'id_etudiant', referencedColumnName: 'id', nullable: false)]
-    protected Etudiant $etudiant;
+    #[ORM\JoinColumn(name: 'id_etudiant',referencedColumnName: 'id_etudiant', nullable: false)]
 
-    #[ORM\Column(name: 'nom_demandeur', type: 'string', length: 100)]
-    protected string $nomDemandeur;
+    private Etudiant $eleve;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $motif = null;
 
-    #[ORM\Column(name: 'description', type: 'text')]
-    protected string $description;
+    #[ORM\Column(type:"string", length:255)]
 
-    #[ORM\Column(name: 'date_incident', type: 'datetime')]
-    protected \DateTime $dateIncident;
+    private string $demandeur;
 
-    #[ORM\Column(name: 'date_creation', type: 'datetime')]
-    protected \DateTime $dateCreation;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'id_utilisateur', referencedColumnName: 'id', nullable: false)]
-    protected User $utilisateur;
+    #[ORM\ManyToOne(targetEntity: Motif::class)]
+    #[ORM\JoinColumn(name: 'id_motif',referencedColumnName: 'id', nullable: false)]
 
-    // Getters et Setters
-    public function getId(): int {
+    private ?Motif $motif;
+
+    #[ORM\Column(type:"string", length:255, nullable:true)]
+
+    private ?string $descriptionMotif;
+
+
+    #[ORM\Column(type:"datetime")]
+
+    private \DateTime $dateIncident;
+
+
+    #[ORM\Column(type:"string", length:255)]
+
+    private string $creePar;
+
+    public function getId(): int
+    {
         return $this->id;
     }
 
-    public function getEtudiant(): Etudiant {
-        return $this->etudiant;
-    }
-
-    public function setEtudiant(Etudiant $etudiant): void {
-        $this->etudiant = $etudiant;
-    }
-
-    public function getNomDemandeur(): string {
-        return $this->nomDemandeur;
-    }
-
-    public function setNomDemandeur(string $nomDemandeur): void {
-        $this->nomDemandeur = $nomDemandeur;
-    }
-
-    public function setMotif(?string $motif): self
+    public function setId(int $id): void
     {
-        $this->motif = $motif;
-        return $this;
+        $this->id = $id;
     }
 
-    public function getMotif(): ?string
+    public function getEleve(): Etudiant
+    {
+        return $this->eleve;
+    }
+
+    public function setEleve(Etudiant $eleve): void
+    {
+        $this->eleve = $eleve;
+    }
+
+    public function getDemandeur(): string
+    {
+        return $this->demandeur;
+    }
+
+    public function setDemandeur(string $demandeur): void
+    {
+        $this->demandeur = $demandeur;
+    }
+
+    public function getMotif(): ?Motif
     {
         return $this->motif;
     }
 
-    public function getDescription(): string {
-        return $this->description;
+    public function setMotif(?Motif $motif): void
+    {
+        $this->motif = $motif;
     }
 
-    public function setDescription(string $description): void {
-        $this->description = $description;
+    public function getDescriptionMotif(): ?string
+    {
+        return $this->descriptionMotif;
     }
 
-    public function getDateIncident(): \DateTime {
+    public function setDescriptionMotif(?string $descriptionMotif): void
+    {
+        $this->descriptionMotif = $descriptionMotif;
+    }
+
+    public function getDateIncident(): \DateTime
+    {
         return $this->dateIncident;
     }
 
-    public function setDateIncident(\DateTime $dateIncident): void {
+    public function setDateIncident(\DateTime $dateIncident): void
+    {
         $this->dateIncident = $dateIncident;
     }
 
-    public function getDateCreation(): \DateTime {
-        return $this->dateCreation;
+    public function getCreePar(): string
+    {
+        return $this->creePar;
     }
 
-    public function setDateCreation(\DateTime $dateCreation): void {
-        $this->dateCreation = $dateCreation;
+    public function setCreePar(string $creePar): void
+    {
+        $this->creePar = $creePar;
     }
 
-    public function getUtilisateur(): User {
-        return $this->utilisateur;
-    }
 
-    public function setUtilisateur(User $utilisateur): void {
-        $this->utilisateur = $utilisateur;
-    }
 }
