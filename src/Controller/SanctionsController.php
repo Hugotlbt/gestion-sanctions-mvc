@@ -151,8 +151,8 @@ class SanctionsController extends AbstractController
                     $count = 0;
                     foreach ($records as $record) {
                         $etudiant = new \App\Entity\Etudiant();
-                        $etudiant->setPrenom($record['prenom']);
-                        $etudiant->setNom($record['nom']);
+                        $etudiant->setPrenom($record['Prénom']);
+                        $etudiant->setNom($record['Nom']);
                         $etudiant->setIdPromotion($promotion);
 
                         $this->entityManager->persist($etudiant);

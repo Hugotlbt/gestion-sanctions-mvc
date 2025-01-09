@@ -14,15 +14,6 @@
 <div class="container mt-5" style="height: 60%">
     <h1 class="pt-5">Ajouter des élèves à partir d'un fichier CSV</h1>
 
-    <?php if (isset($erreurs)): ?>
-        <div class="alert alert-danger" role="alert">
-            <ul>
-                <?php foreach ($erreurs as $erreur): ?>
-                    <li><?= htmlspecialchars($erreur) ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    <?php endif; ?>
 
     <form action="" method="POST" class="mt-4" enctype="multipart/form-data">
         <div class="form-group form-control-lg">
@@ -32,7 +23,7 @@
                    name="formFile"
                    type="file"
                    accept=".csv"
-                   required>
+                   >
             <?php if (isset($erreurs['formFile'])): ?>
                 <p class="form-text text-danger"><?= $erreurs['formFile'] ?></p>
             <?php endif; ?>
@@ -43,7 +34,7 @@
             <select class="form-select <?= isset($erreurs['listePromotion']) ? 'border border-2 border-danger' : '' ?>"
                     name="listePromotion"
                     id="listePromotion"
-                    required>
+                    >
                 <option value="" selected>Choisir une promotion</option>
 
 
